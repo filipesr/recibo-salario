@@ -69,7 +69,7 @@ export default function ModernTemplate({ data }: TemplateProps<ModernReceiptData
               </div>
             </div>
             <div className="text-xs text-gray-500 space-y-1">
-              <div>CPF/CNPJ: {data.emitenteCpfCnpj || '__________________'}</div>
+              <div>CI: {data.emitenteCpfCnpj || '__________________'}</div>
               <div>Tel: {data.emitenteTelefone || '__________________'}</div>
               {data.emitenteEmail && (
                 <div>Email: {data.emitenteEmail}</div>

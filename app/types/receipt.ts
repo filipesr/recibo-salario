@@ -79,7 +79,7 @@ export interface Payer {
   responsavel?: string;
 }
 
-// Saved receipt for CSV export/import
+// Saved receipt for JSON export/import
 export interface SavedReceipt {
   numero: string;
   data: string;
@@ -98,4 +98,15 @@ export interface SavedReceipt {
   emitenteTelefone: string;
   emitenteEmail: string;
   template: TemplateType;
+}
+
+// Valid template types array
+export const VALID_TEMPLATES: TemplateType[] = ['classic', 'two-column', 'modern', 'formal'];
+
+// Validate and return a valid template type with fallback
+export function validateTemplate(template: string | undefined | null): TemplateType {
+  if (!template) return 'two-column';
+  return VALID_TEMPLATES.includes(template as TemplateType)
+    ? (template as TemplateType)
+    : 'two-column';
 }

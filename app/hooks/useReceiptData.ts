@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
-import { TemplateType } from '@/app/types/receipt';
+import { TemplateType, validateTemplate } from '@/app/types/receipt';
 
 export function useReceiptData() {
   const [formData, setFormData] = useLocalStorage<Record<string, string>>('currentReceipt', {
@@ -33,10 +33,20 @@ export function useReceiptData() {
     setFormData({ data: new Date().toISOString().split('T')[0] });
   }, [setFormData]);
 
+  // Validate template on initial load
+  useEffect(() => {
+    const validatedTemplate = validateTemplate(selectedTemplate);
+    if (validatedTemplate !== selectedTemplate) {
+      setSelectedTemplate(validatedTemplate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
+
   // Change template while preserving compatible data
   const changeTemplate = useCallback(
     (newTemplate: TemplateType) => {
-      setSelectedTemplate(newTemplate);
+      const validatedTemplate = validateTemplate(newTemplate);
+      setSelectedTemplate(validatedTemplate);
       // Data is preserved automatically, no need to clear
     },
     [setSelectedTemplate]
