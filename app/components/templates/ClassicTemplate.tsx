@@ -17,7 +17,6 @@ export default function ClassicTemplate({ data }: TemplateProps<ClassicReceiptDa
         </div>
 
         <div className="bg-white border-2 border-gray-800 p-2 rounded flex items-center shadow-inner">
-          <span className="text-xl font-bold mr-2 text-gray-700">R$</span>
           <span className="text-2xl font-bold">{data.valor || '0,00'}</span>
         </div>
       </div>

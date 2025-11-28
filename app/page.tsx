@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TemplateSelector from './components/TemplateSelector';
 import PayerSelector from './components/PayerSelector';
 import PayerModal from './components/PayerModal';
 import ReceiptHistory from './components/ReceiptHistory';
@@ -21,11 +20,43 @@ import {
   Payer,
 } from './types/receipt';
 
+// Templates disponíveis
+const templates = [
+  {
+    id: 'classic' as TemplateType,
+    name: 'Clássico',
+    description: 'Estilo tradicional amarelo com fonte de máquina de escrever',
+    color: 'bg-yellow-50 border-yellow-400',
+    icon: '📄',
+  },
+  {
+    id: 'two-column' as TemplateType,
+    name: 'Duas Colunas',
+    description: 'Recibo azul com canhoto destacável',
+    color: 'bg-sky-50 border-cyan-400',
+    icon: '📋',
+  },
+  {
+    id: 'modern' as TemplateType,
+    name: 'Moderno',
+    description: 'Design minimalista e contemporâneo',
+    color: 'bg-white border-gray-300',
+    icon: '✨',
+  },
+  {
+    id: 'formal' as TemplateType,
+    name: 'Formal',
+    description: 'Layout corporativo e profissional',
+    color: 'bg-slate-50 border-slate-400',
+    icon: '🏢',
+  },
+];
+
 // Configuração de campos para cada template
 const templateFields: Record<TemplateType, FieldConfig[]> = {
   classic: [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '001' },
-    { name: 'valor', label: 'Valor (R$)', type: 'text', required: true, placeholder: '1.000,00' },
+    { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
     { name: 'pagador', label: 'Recebi(emos) de', type: 'text', required: true, placeholder: 'Nome do pagador' },
     { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
@@ -37,7 +68,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
   ],
   'two-column': [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '001' },
-    { name: 'valor', label: 'Valor (R$)', type: 'text', required: true, placeholder: '1.000,00' },
+    { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
     { name: 'pagador', label: 'Recebi(emos) de', type: 'text', required: true, placeholder: 'Nome do pagador' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
     { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: false, placeholder: '(11) 99999-9999' },
@@ -53,7 +84,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
   ],
   modern: [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '001' },
-    { name: 'valor', label: 'Valor (R$)', type: 'text', required: true, placeholder: '1.000,00' },
+    { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
     { name: 'pagador', label: 'Recebido de', type: 'text', required: true, placeholder: 'Nome do pagador' },
     { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
@@ -66,7 +97,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
   ],
   formal: [
     { name: 'numero', label: 'Número do Documento', type: 'text', required: true, placeholder: '001' },
-    { name: 'valor', label: 'Valor (R$)', type: 'text', required: true, placeholder: '1.000,00' },
+    { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
     { name: 'pagador', label: 'Nome do Pagador', type: 'text', required: true, placeholder: 'Nome ou razão social' },
     { name: 'pagadorCpfCnpj', label: 'CPF/CNPJ do Pagador', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
@@ -185,22 +216,13 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-gray-900">Gerador de Recibos</h1>
         </header>
 
-        {/* Configurações Compactas */}
-        <div className="no-print space-y-0 mb-6">
-          <TemplateSelector
-            selectedTemplate={selectedTemplate}
-            onSelectTemplate={handleTemplateChange}
-          />
+        {/* Seletor de Pagador */}
+        <div className="no-print mb-6">
           <PayerSelector
             payers={payers}
             selectedPayerId={selectedPayerId}
             onSelectPayer={handleSelectPayer}
             onOpenModal={() => setIsModalOpen(true)}
-          />
-          <ReceiptHistory
-            formData={formData}
-            selectedTemplate={selectedTemplate}
-            onLoadReceipt={handleLoadReceipt}
           />
         </div>
 
@@ -209,68 +231,304 @@ export default function Home() {
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-bold text-gray-900">Dados do Recibo</h2>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleNewReceipt}
-                  className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition"
-                >
-                  🗑️ Novo
-                </button>
+              <ReceiptHistory
+                formData={formData}
+                selectedTemplate={selectedTemplate}
+                onLoadReceipt={handleLoadReceipt}
+              />
+              <button
+                onClick={handleNewReceipt}
+                className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition"
+              >
+                Limpar
+              </button>
+            </div>
+
+            {/* Layout Customizado de Inputs */}
+            <form className="space-y-4">
+              {/* Linha 1: Número - Valor - Valor por extenso */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="numero" className="block text-xs font-medium text-gray-700 mb-1">
+                    Número <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="numero"
+                    type="text"
+                    name="numero"
+                    value={formData.numero || ''}
+                    onChange={handleInputChange}
+                    placeholder="001"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="valor" className="block text-xs font-medium text-gray-700 mb-1">
+                    Valor <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="valor"
+                    type="text"
+                    name="valor"
+                    value={formData.valor || ''}
+                    onChange={handleInputChange}
+                    placeholder="1.000,00"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="valorExtenso" className="block text-xs font-medium text-gray-700 mb-1">
+                    Valor por extenso <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="valorExtenso"
+                    type="text"
+                    name="valorExtenso"
+                    value={formData.valorExtenso || ''}
+                    onChange={handleInputChange}
+                    placeholder="Mil reais"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Linha 2: Referente a */}
+              <div>
+                <label htmlFor="referente" className="block text-xs font-medium text-gray-700 mb-1">
+                  Referente a <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  id="referente"
+                  name="referente"
+                  value={formData.referente || ''}
+                  onChange={handleInputChange}
+                  placeholder="Descrição do serviço ou produto"
+                  required
+                  rows={2}
+                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+
+              {/* Linha 3: Recebi de - Telefone - Email - Endereço (Pagador) */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label htmlFor="pagador" className="block text-xs font-medium text-gray-700 mb-1">
+                    Recebi de <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="pagador"
+                    type="text"
+                    name="pagador"
+                    value={formData.pagador || ''}
+                    onChange={handleInputChange}
+                    placeholder="Nome do pagador"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="pagadorTelefone" className="block text-xs font-medium text-gray-700 mb-1">
+                    Telefone Pagador
+                  </label>
+                  <input
+                    id="pagadorTelefone"
+                    type="tel"
+                    name="pagadorTelefone"
+                    value={formData.pagadorTelefone || ''}
+                    onChange={handleInputChange}
+                    placeholder="(11) 99999-9999"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="pagadorEmail" className="block text-xs font-medium text-gray-700 mb-1">
+                    Email Pagador
+                  </label>
+                  <input
+                    id="pagadorEmail"
+                    type="email"
+                    name="pagadorEmail"
+                    value={formData.pagadorEmail || ''}
+                    onChange={handleInputChange}
+                    placeholder="email@exemplo.com"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="pagadorEndereco" className="block text-xs font-medium text-gray-700 mb-1">
+                    Endereço Pagador
+                  </label>
+                  <input
+                    id="pagadorEndereco"
+                    type="text"
+                    name="pagadorEndereco"
+                    value={formData.pagadorEndereco || ''}
+                    onChange={handleInputChange}
+                    placeholder="Rua, número, cidade"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Linha 4: Nome Emitente - Doc - Telefone - Endereço */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label htmlFor="emitenteNome" className="block text-xs font-medium text-gray-700 mb-1">
+                    Nome Emitente <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="emitenteNome"
+                    type="text"
+                    name="emitenteNome"
+                    value={formData.emitenteNome || ''}
+                    onChange={handleInputChange}
+                    placeholder="Seu nome"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="emitenteCpfCnpj" className="block text-xs font-medium text-gray-700 mb-1">
+                    CPF/CNPJ Emitente <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="emitenteCpfCnpj"
+                    type="text"
+                    name="emitenteCpfCnpj"
+                    value={formData.emitenteCpfCnpj || ''}
+                    onChange={handleInputChange}
+                    placeholder="000.000.000-00"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="emitenteTelefone" className="block text-xs font-medium text-gray-700 mb-1">
+                    Telefone Emitente <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="emitenteTelefone"
+                    type="tel"
+                    name="emitenteTelefone"
+                    value={formData.emitenteTelefone || ''}
+                    onChange={handleInputChange}
+                    placeholder="(11) 99999-9999"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="emitenteEndereco" className="block text-xs font-medium text-gray-700 mb-1">
+                    Endereço Emitente
+                  </label>
+                  <input
+                    id="emitenteEndereco"
+                    type="text"
+                    name="emitenteEndereco"
+                    value={formData.emitenteEndereco || ''}
+                    onChange={handleInputChange}
+                    placeholder="Rua, número, cidade"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              {/* Linha 5: Cidade - Data */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="cidade" className="block text-xs font-medium text-gray-700 mb-1">
+                    Cidade <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="cidade"
+                    type="text"
+                    name="cidade"
+                    value={formData.cidade || ''}
+                    onChange={handleInputChange}
+                    placeholder="São Paulo"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="data" className="block text-xs font-medium text-gray-700 mb-1">
+                    Data <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="data"
+                    type="date"
+                    name="data"
+                    value={formData.data || new Date().toISOString().split('T')[0]}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* Card de Controles (não imprime) */}
+        <div className="no-print mb-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            {/* Header: Título - Modelos - Imprimir */}
+            <div className="flex items-center justify-between gap-6">
+              {/* Esquerda: Título */}
+              <div className="flex-shrink-0">
+                <h2 className="text-lg font-bold text-gray-900">Preview do Recibo</h2>
+              </div>
+
+              {/* Centro: Seletor de Modelos */}
+              <div className="flex-grow">
+                <div className="flex items-center justify-center gap-3">
+                  <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">Modelo:</h3>
+                  <div className="flex gap-2 flex-wrap">
+                    {templates.map((template) => (
+                      <button
+                        key={template.id}
+                        onClick={() => handleTemplateChange(template.id)}
+                        className={`
+                          flex items-center gap-2 px-3 py-2 rounded-lg border transition-all text-sm
+                          ${template.color}
+                          ${
+                            selectedTemplate === template.id
+                              ? 'border-blue-500 ring-2 ring-blue-200 font-semibold'
+                              : 'hover:border-gray-400'
+                          }
+                        `}
+                        title={template.description}
+                      >
+                        <span className="text-lg">{template.icon}</span>
+                        <span>{template.name}</span>
+                        {selectedTemplate === template.id && (
+                          <span className="text-blue-500 font-bold">✓</span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Direita: Botão Imprimir */}
+              <div className="flex-shrink-0">
                 <button
                   onClick={handlePrint}
-                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition"
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition whitespace-nowrap"
                 >
                   🖨️ Imprimir
                 </button>
               </div>
             </div>
-
-            <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {currentFields.map((field) => (
-                <div
-                  key={field.name}
-                  className={field.type === 'textarea' ? 'md:col-span-2 lg:col-span-3' : ''}
-                >
-                  <label htmlFor={field.name} className="block text-xs font-medium text-gray-700 mb-1">
-                    {field.label} {field.required && <span className="text-red-500">*</span>}
-                  </label>
-                  {field.type === 'textarea' ? (
-                    <textarea
-                      id={field.name}
-                      name={field.name}
-                      value={formData[field.name] || ''}
-                      onChange={handleInputChange}
-                      placeholder={field.placeholder}
-                      required={field.required}
-                      rows={2}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  ) : (
-                    <input
-                      id={field.name}
-                      type={field.type}
-                      name={field.name}
-                      value={formData[field.name] || field.defaultValue || ''}
-                      onChange={handleInputChange}
-                      placeholder={field.placeholder}
-                      required={field.required}
-                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  )}
-                </div>
-              ))}
-            </form>
           </div>
         </div>
 
-        {/* Preview no Final */}
-        <div>
-          <div className="bg-white rounded-lg shadow-sm p-4 no-print mb-4">
-            <h2 className="text-lg font-bold text-gray-900">Preview do Recibo</h2>
-          </div>
-          <div className="flex justify-center">
-            {renderTemplate()}
-          </div>
+        {/* Preview do Recibo (imprime) */}
+        <div className="flex justify-center">
+          {renderTemplate()}
         </div>
       </div>
 

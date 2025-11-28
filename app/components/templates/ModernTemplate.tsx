@@ -13,7 +13,7 @@ export default function ModernTemplate({ data }: TemplateProps<ModernReceiptData
         </div>
         <div className="text-right">
           <div className="text-4xl font-bold text-gray-900">
-            R$ {data.valor || '0,00'}
+            {data.valor || '0,00'}
           </div>
           <div className="text-xs text-gray-500 mt-1">
             {data.data ? new Date(data.data + 'T00:00:00').toLocaleDateString('pt-BR') : '__/__/____'}

@@ -25,7 +25,7 @@ export default function FormalTemplate({ data }: TemplateProps<FormalReceiptData
               Valor Numérico
             </label>
             <div className="bg-white border-2 border-slate-800 rounded p-3 text-center">
-              <span className="text-3xl font-bold text-slate-900">R$ {data.valor || '0,00'}</span>
+              <span className="text-3xl font-bold text-slate-900">{data.valor || '0,00'}</span>
             </div>
           </div>
           <div>

@@ -47,9 +47,4 @@
   * {
     box-shadow: none !important;
   }
-
-  /* Otimizar grid de impressão */
-  .grid {
-    display: block !important;
-  }
 }
