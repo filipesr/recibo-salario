@@ -8,6 +8,7 @@ import ClassicTemplate from './components/templates/ClassicTemplate';
 import TwoColumnTemplate from './components/templates/TwoColumnTemplate';
 import ModernTemplate from './components/templates/ModernTemplate';
 import FormalTemplate from './components/templates/FormalTemplate';
+import GoonTemplate from './components/templates/GoonTemplate';
 import { usePayers } from './hooks/usePayers';
 import { useReceiptData } from './hooks/useReceiptData';
 import {
@@ -16,12 +17,20 @@ import {
   TwoColumnReceiptData,
   ModernReceiptData,
   FormalReceiptData,
+  GoonReceiptData,
   FieldConfig,
   Payer,
 } from './types/receipt';
 
 // Templates disponíveis
 const templates = [
+  {
+    id: 'goon' as TemplateType,
+    name: 'GoOn',
+    description: 'Template profissional com branding GoOn',
+    color: 'bg-red-50 border-red-600',
+    icon: '📋',
+  },
   {
     id: 'classic' as TemplateType,
     name: 'Clássico',
@@ -113,6 +122,24 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
     { name: 'emitenteEmail', label: 'Email do Emitente', type: 'text', required: true, placeholder: 'contato@empresa.com' },
   ],
+  goon: [
+    { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '0000951' },
+    { name: 'moeda', label: 'Moeda', type: 'text', required: true, placeholder: 'R$', defaultValue: 'R$' },
+    { name: 'data', label: 'Data de Emissão', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
+    { name: 'pagador', label: 'Recibí(mos) de', type: 'text', required: true, placeholder: 'Nome do pagador' },
+    { name: 'pagadorCpfCnpj', label: 'RUC/CPF/CNPJ', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Endereço completo do pagador' },
+    { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: true, placeholder: '(0991) 501 572' },
+    { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
+    { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
+    { name: 'referente', label: 'En concepto de', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
+    { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'Ciudad del Este' },
+    { name: 'emitenteNome', label: 'Nome da Empresa', type: 'text', required: true, placeholder: 'GoOn Marketing & Eventos' },
+    { name: 'emitenteCargo', label: 'Atividade', type: 'text', required: true, placeholder: 'Actividades Publicitarias' },
+    { name: 'emitenteEndereco', label: 'Endereço Completo', type: 'textarea', required: true, placeholder: 'Endereço completo da empresa' },
+    { name: 'emitenteCpfCnpj', label: 'CPF/CNPJ', type: 'text', required: true, placeholder: '00.000.000/0000-00' },
+    { name: 'emitenteTelefone', label: 'Telefone', type: 'tel', required: true, placeholder: '(0991) 501 572' },
+  ],
 };
 
 export default function Home() {
@@ -187,6 +214,8 @@ export default function Home() {
         return <ModernTemplate data={formData as unknown as ModernReceiptData} />;
       case 'formal':
         return <FormalTemplate data={formData as unknown as FormalReceiptData} />;
+      case 'goon':
+        return <GoonTemplate data={formData as unknown as GoonReceiptData} />;
     }
   };
 

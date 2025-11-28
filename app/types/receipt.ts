@@ -34,15 +34,26 @@ export interface FormalReceiptData extends BaseReceiptData {
   emitenteEmail: string;
 }
 
+// GoOn template with company branding
+export interface GoonReceiptData extends BaseReceiptData {
+  pagadorCpfCnpj: string;
+  pagadorEndereco: string;
+  pagadorTelefone: string;
+  moeda: string;
+  emitenteEndereco: string;
+  emitenteCargo: string;
+}
+
 // Union type for all receipt data types
 export type ReceiptData =
   | ClassicReceiptData
   | TwoColumnReceiptData
   | ModernReceiptData
-  | FormalReceiptData;
+  | FormalReceiptData
+  | GoonReceiptData;
 
 // Template types
-export type TemplateType = 'classic' | 'two-column' | 'modern' | 'formal';
+export type TemplateType = 'classic' | 'two-column' | 'modern' | 'formal' | 'goon';
 
 // Template component props
 export interface TemplateProps<T = BaseReceiptData> {
@@ -101,7 +112,7 @@ export interface SavedReceipt {
 }
 
 // Valid template types array
-export const VALID_TEMPLATES: TemplateType[] = ['classic', 'two-column', 'modern', 'formal'];
+export const VALID_TEMPLATES: TemplateType[] = ['classic', 'two-column', 'modern', 'formal', 'goon'];
 
 // Validate and return a valid template type with fallback
 export function validateTemplate(template: string | undefined | null): TemplateType {
