@@ -80,22 +80,22 @@ export interface Payer {
 }
 
 // Saved receipt for CSV export/import
-export interface SavedReceipt extends Record<string, string> {
+export interface SavedReceipt {
   numero: string;
   data: string;
   valor: string;
   valorExtenso: string;
   pagador: string;
-  pagadorCpfCnpj?: string;
-  pagadorEndereco?: string;
-  pagadorTelefone?: string;
-  pagadorEmail?: string;
+  pagadorCpfCnpj: string;
+  pagadorEndereco: string;
+  pagadorTelefone: string;
+  pagadorEmail: string;
   referente: string;
   cidade: string;
   emitenteNome: string;
   emitenteCpfCnpj: string;
-  emitenteEndereco?: string;
+  emitenteEndereco: string;
   emitenteTelefone: string;
-  emitenteEmail?: string;
+  emitenteEmail: string;
   template: TemplateType;
 }

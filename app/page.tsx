@@ -143,13 +143,13 @@ export default function Home() {
   const renderTemplate = () => {
     switch (selectedTemplate) {
       case 'classic':
-        return <ClassicTemplate data={formData as ClassicReceiptData} />;
+        return <ClassicTemplate data={formData as unknown as ClassicReceiptData} />;
       case 'two-column':
-        return <TwoColumnTemplate data={formData as TwoColumnReceiptData} />;
+        return <TwoColumnTemplate data={formData as unknown as TwoColumnReceiptData} />;
       case 'modern':
-        return <ModernTemplate data={formData as ModernReceiptData} />;
+        return <ModernTemplate data={formData as unknown as ModernReceiptData} />;
       case 'formal':
-        return <FormalTemplate data={formData as FormalReceiptData} />;
+        return <FormalTemplate data={formData as unknown as FormalReceiptData} />;
     }
   };
 
