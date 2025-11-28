@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Print styles */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 1cm;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  main {
+    background: white !important;
+    padding: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-full-width {
+    width: 100%;
+    max-width: none;
+    margin: 0 auto;
+    box-shadow: none !important;
+  }
+
+  /* Evitar quebras de página indesejadas */
+  .print-full-width,
+  .print-full-width > * {
+    page-break-inside: avoid;
+  }
+
+  /* Remove bordas arredondadas e sombras na impressão */
+  * {
+    box-shadow: none !important;
+  }
+
+  /* Otimizar grid de impressão */
+  .grid {
+    display: block !important;
+  }
+}
