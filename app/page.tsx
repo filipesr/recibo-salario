@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 import TemplateSelector from './components/TemplateSelector';
+import PayerSelector from './components/PayerSelector';
+import PayerModal from './components/PayerModal';
+import ReceiptHistory from './components/ReceiptHistory';
 import ClassicTemplate from './components/templates/ClassicTemplate';
 import TwoColumnTemplate from './components/templates/TwoColumnTemplate';
 import ModernTemplate from './components/templates/ModernTemplate';
 import FormalTemplate from './components/templates/FormalTemplate';
+import { usePayers } from './hooks/usePayers';
+import { useReceiptData } from './hooks/useReceiptData';
 import {
   TemplateType,
   ClassicReceiptData,
@@ -13,6 +18,7 @@ import {
   ModernReceiptData,
   FormalReceiptData,
   FieldConfig,
+  Payer,
 } from './types/receipt';
 
 // Configuração de campos para cada template
@@ -34,6 +40,8 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'valor', label: 'Valor (R$)', type: 'text', required: true, placeholder: '1.000,00' },
     { name: 'pagador', label: 'Recebi(emos) de', type: 'text', required: true, placeholder: 'Nome do pagador' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
+    { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: false, placeholder: '(11) 99999-9999' },
+    { name: 'pagadorEmail', label: 'Email do Pagador', type: 'text', required: false, placeholder: 'email@exemplo.com' },
     { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
@@ -62,6 +70,8 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'pagador', label: 'Nome do Pagador', type: 'text', required: true, placeholder: 'Nome ou razão social' },
     { name: 'pagadorCpfCnpj', label: 'CPF/CNPJ do Pagador', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
+    { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: false, placeholder: '(11) 99999-9999' },
+    { name: 'pagadorEmail', label: 'Email do Pagador', type: 'text', required: false, placeholder: 'email@exemplo.com' },
     { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição detalhada do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
@@ -75,20 +85,55 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
 };
 
 export default function Home() {
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>('classic');
-  const [formData, setFormData] = useState<Record<string, string>>({
-    data: new Date().toISOString().split('T')[0],
-  });
+  const { payers, addPayer, updatePayer, deletePayer } = usePayers();
+  const {
+    formData,
+    setFormData,
+    selectedTemplate,
+    updateField,
+    updateFields,
+    clearReceipt,
+    changeTemplate,
+  } = useReceiptData();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPayerId, setSelectedPayerId] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    updateField(name, value);
   };
 
   const handleTemplateChange = (template: TemplateType) => {
-    setSelectedTemplate(template);
-    // Reset form data quando mudar de template, mantendo apenas data
-    setFormData({ data: new Date().toISOString().split('T')[0] });
+    changeTemplate(template);
+  };
+
+  const handleSelectPayer = (payer: Payer | null) => {
+    if (payer) {
+      setSelectedPayerId(payer.id);
+      // Update form fields with payer data
+      updateFields({
+        pagador: payer.nome,
+        pagadorCpfCnpj: payer.cpfCnpj,
+        pagadorEndereco: payer.endereco,
+        pagadorTelefone: payer.telefone,
+        pagadorEmail: payer.email,
+      });
+    } else {
+      setSelectedPayerId(null);
+    }
+  };
+
+  const handleLoadReceipt = (data: Record<string, string>, template: TemplateType) => {
+    setFormData(data);
+    changeTemplate(template);
+  };
+
+  const handleNewReceipt = () => {
+    if (confirm('Deseja limpar todos os campos e começar um novo recibo?')) {
+      clearReceipt();
+      setSelectedPayerId(null);
+    }
   };
 
   const handlePrint = () => {
@@ -126,12 +171,39 @@ export default function Home() {
           />
         </div>
 
+        {/* Payer Selector */}
+        <div className="no-print">
+          <PayerSelector
+            payers={payers}
+            selectedPayerId={selectedPayerId}
+            onSelectPayer={handleSelectPayer}
+            onOpenModal={() => setIsModalOpen(true)}
+          />
+        </div>
+
+        {/* Receipt History */}
+        <div className="no-print">
+          <ReceiptHistory
+            formData={formData}
+            selectedTemplate={selectedTemplate}
+            onLoadReceipt={handleLoadReceipt}
+          />
+        </div>
+
         {/* Form and Preview */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Form */}
           <div className="no-print">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Preencha os Dados</h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">Preencha os Dados</h2>
+                <button
+                  onClick={handleNewReceipt}
+                  className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
+                >
+                  🗑️ Novo Recibo
+                </button>
+              </div>
               <form className="space-y-4">
                 {currentFields.map((field) => (
                   <div key={field.name}>
@@ -185,6 +257,16 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Payer Modal */}
+      <PayerModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        payers={payers}
+        onAddPayer={addPayer}
+        onUpdatePayer={updatePayer}
+        onDeletePayer={deletePayer}
+      />
     </main>
   );
 }

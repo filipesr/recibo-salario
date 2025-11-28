@@ -67,3 +67,35 @@ export interface FieldConfig {
   placeholder?: string;
   defaultValue?: string;
 }
+
+// Payer (Pagador) interface for managing payers
+export interface Payer {
+  id: string;
+  nome: string;
+  cpfCnpj: string;
+  endereco: string;
+  telefone: string;
+  email: string;
+  responsavel?: string;
+}
+
+// Saved receipt for CSV export/import
+export interface SavedReceipt extends Record<string, string> {
+  numero: string;
+  data: string;
+  valor: string;
+  valorExtenso: string;
+  pagador: string;
+  pagadorCpfCnpj?: string;
+  pagadorEndereco?: string;
+  pagadorTelefone?: string;
+  pagadorEmail?: string;
+  referente: string;
+  cidade: string;
+  emitenteNome: string;
+  emitenteCpfCnpj: string;
+  emitenteEndereco?: string;
+  emitenteTelefone: string;
+  emitenteEmail?: string;
+  template: TemplateType;
+}
