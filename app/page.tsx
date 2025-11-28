@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TemplateSelector from './components/TemplateSelector';
 import PayerSelector from './components/PayerSelector';
 import PayerModal from './components/PayerModal';
@@ -98,6 +98,12 @@ export default function Home() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPayerId, setSelectedPayerId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  // Evita hydration mismatch ao carregar dados do localStorage
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -154,6 +160,22 @@ export default function Home() {
   };
 
   const currentFields = templateFields[selectedTemplate];
+
+  // Evita hydration mismatch - não renderiza até montar no cliente
+  if (!mounted) {
+    return (
+      <main className="min-h-screen bg-gray-50 py-6 px-4">
+        <div className="max-w-7xl mx-auto">
+          <header className="text-center mb-6">
+            <h1 className="text-3xl font-bold text-gray-900">Gerador de Recibos</h1>
+          </header>
+          <div className="flex justify-center items-center h-64">
+            <div className="text-gray-500">Carregando...</div>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 py-6 px-4">
