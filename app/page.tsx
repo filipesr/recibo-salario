@@ -156,33 +156,25 @@ export default function Home() {
   const currentFields = templateFields[selectedTemplate];
 
   return (
-    <main className="min-h-screen bg-gray-100 py-8 px-4">
-      <div className="container mx-auto">
-        <header className="text-center mb-8 no-print">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Gerador de Recibos</h1>
-          <p className="text-gray-600">Crie recibos profissionais facilmente</p>
+    <main className="min-h-screen bg-gray-50 py-6 px-4">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Compacto */}
+        <header className="text-center mb-6 no-print">
+          <h1 className="text-3xl font-bold text-gray-900">Gerador de Recibos</h1>
         </header>
 
-        {/* Template Selector */}
-        <div className="no-print">
+        {/* Configurações Compactas */}
+        <div className="no-print space-y-0 mb-6">
           <TemplateSelector
             selectedTemplate={selectedTemplate}
             onSelectTemplate={handleTemplateChange}
           />
-        </div>
-
-        {/* Payer Selector */}
-        <div className="no-print">
           <PayerSelector
             payers={payers}
             selectedPayerId={selectedPayerId}
             onSelectPayer={handleSelectPayer}
             onOpenModal={() => setIsModalOpen(true)}
           />
-        </div>
-
-        {/* Receipt History */}
-        <div className="no-print">
           <ReceiptHistory
             formData={formData}
             selectedTemplate={selectedTemplate}
@@ -190,70 +182,72 @@ export default function Home() {
           />
         </div>
 
-        {/* Form and Preview */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Form */}
-          <div className="no-print">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Preencha os Dados</h2>
+        {/* Formulário de Dados */}
+        <div className="no-print">
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-bold text-gray-900">Dados do Recibo</h2>
+              <div className="flex gap-2">
                 <button
                   onClick={handleNewReceipt}
-                  className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
+                  className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition"
                 >
-                  🗑️ Novo Recibo
+                  🗑️ Novo
+                </button>
+                <button
+                  onClick={handlePrint}
+                  className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition"
+                >
+                  🖨️ Imprimir
                 </button>
               </div>
-              <form className="space-y-4">
-                {currentFields.map((field) => (
-                  <div key={field.name}>
-                    <label htmlFor={field.name} className="block text-sm font-medium text-gray-700 mb-1">
-                      {field.label} {field.required && <span className="text-red-500">*</span>}
-                    </label>
-                    {field.type === 'textarea' ? (
-                      <textarea
-                        id={field.name}
-                        name={field.name}
-                        value={formData[field.name] || ''}
-                        onChange={handleInputChange}
-                        placeholder={field.placeholder}
-                        required={field.required}
-                        rows={3}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    ) : (
-                      <input
-                        id={field.name}
-                        type={field.type}
-                        name={field.name}
-                        value={formData[field.name] || field.defaultValue || ''}
-                        onChange={handleInputChange}
-                        placeholder={field.placeholder}
-                        required={field.required}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    )}
-                  </div>
-                ))}
-              </form>
-
-              <button
-                onClick={handlePrint}
-                className="w-full mt-6 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-lg"
-              >
-                🖨️ Imprimir Recibo
-              </button>
             </div>
+
+            <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {currentFields.map((field) => (
+                <div
+                  key={field.name}
+                  className={field.type === 'textarea' ? 'md:col-span-2 lg:col-span-3' : ''}
+                >
+                  <label htmlFor={field.name} className="block text-xs font-medium text-gray-700 mb-1">
+                    {field.label} {field.required && <span className="text-red-500">*</span>}
+                  </label>
+                  {field.type === 'textarea' ? (
+                    <textarea
+                      id={field.name}
+                      name={field.name}
+                      value={formData[field.name] || ''}
+                      onChange={handleInputChange}
+                      placeholder={field.placeholder}
+                      required={field.required}
+                      rows={2}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  ) : (
+                    <input
+                      id={field.name}
+                      type={field.type}
+                      name={field.name}
+                      value={formData[field.name] || field.defaultValue || ''}
+                      onChange={handleInputChange}
+                      placeholder={field.placeholder}
+                      required={field.required}
+                      className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  )}
+                </div>
+              ))}
+            </form>
           </div>
+        </div>
 
-          {/* Preview */}
-          <div>
-            <div className="bg-white rounded-lg shadow-md p-6 no-print mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Preview</h2>
-            </div>
-            <div className="flex justify-center">
-              {renderTemplate()}
-            </div>
+        {/* Preview no Final */}
+        <div>
+          <div className="bg-white rounded-lg shadow-sm p-4 no-print mb-4">
+            <h2 className="text-lg font-bold text-gray-900">Preview do Recibo</h2>
+          </div>
+          <div className="flex justify-center">
+            {renderTemplate()}
           </div>
         </div>
       </div>

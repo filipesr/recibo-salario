@@ -40,34 +40,33 @@ const templates = [
 
 export default function TemplateSelector({ selectedTemplate, onSelectTemplate }: TemplateSelectorProps) {
   return (
-    <div className="w-full max-w-6xl mx-auto mb-8">
-      <h2 className="text-2xl font-bold text-gray-900 mb-4">Escolha o Modelo de Recibo</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {templates.map((template) => (
-          <button
-            key={template.id}
-            onClick={() => onSelectTemplate(template.id)}
-            className={`
-              relative p-6 rounded-lg border-2 transition-all
-              ${template.color}
-              ${
-                selectedTemplate === template.id
-                  ? 'ring-4 ring-blue-500 ring-opacity-50 scale-105 shadow-lg'
-                  : 'hover:scale-102 hover:shadow-md'
-              }
-            `}
-          >
-            {selectedTemplate === template.id && (
-              <div className="absolute -top-2 -right-2 bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold shadow-lg">
-                ✓
-              </div>
-            )}
-
-            <div className="text-4xl mb-3">{template.icon}</div>
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{template.name}</h3>
-            <p className="text-sm text-gray-600">{template.description}</p>
-          </button>
-        ))}
+    <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+      <div className="flex items-center gap-3 mb-3">
+        <h3 className="text-sm font-semibold text-gray-700">Modelo:</h3>
+        <div className="flex gap-2 flex-wrap flex-1">
+          {templates.map((template) => (
+            <button
+              key={template.id}
+              onClick={() => onSelectTemplate(template.id)}
+              className={`
+                flex items-center gap-2 px-3 py-2 rounded-lg border transition-all text-sm
+                ${template.color}
+                ${
+                  selectedTemplate === template.id
+                    ? 'border-blue-500 ring-2 ring-blue-200 font-semibold'
+                    : 'hover:border-gray-400'
+                }
+              `}
+              title={template.description}
+            >
+              <span className="text-lg">{template.icon}</span>
+              <span>{template.name}</span>
+              {selectedTemplate === template.id && (
+                <span className="text-blue-500 font-bold">✓</span>
+              )}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

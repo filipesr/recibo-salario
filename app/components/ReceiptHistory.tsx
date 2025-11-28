@@ -116,29 +116,28 @@ export default function ReceiptHistory({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Histórico e Backup</h2>
-      <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          onClick={handleExportCSV}
-          className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition"
-        >
-          💾 Salvar em Arquivo CSV
-        </button>
-        <label className="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition cursor-pointer text-center">
-          📂 Carregar CSV
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".csv"
-            onChange={handleImportCSV}
-            className="hidden"
-          />
-        </label>
+    <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+      <div className="flex items-center gap-3">
+        <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">Backup:</h3>
+        <div className="flex gap-2 flex-1">
+          <button
+            onClick={handleExportCSV}
+            className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition"
+          >
+            💾 Salvar CSV
+          </button>
+          <label className="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition cursor-pointer">
+            📂 Carregar CSV
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".csv"
+              onChange={handleImportCSV}
+              className="hidden"
+            />
+          </label>
+        </div>
       </div>
-      <p className="text-xs text-gray-500 mt-3">
-        Salve seus recibos em arquivo CSV para backup ou carregue um arquivo CSV anterior para visualizar/reimprimir.
-      </p>
     </div>
   );
 }

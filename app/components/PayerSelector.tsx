@@ -28,37 +28,28 @@ export default function PayerSelector({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Selecionar Pagador</h2>
-      <div className="flex gap-3">
-        <div className="flex-1">
-          <select
-            value={selectedPayerId || ''}
-            onChange={handleChange}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-          >
-            <option value="">Selecione um pagador...</option>
-            {payers.map((payer) => (
-              <option key={payer.id} value={payer.id}>
-                {payer.nome} - {payer.cpfCnpj}
-              </option>
-            ))}
-          </select>
-        </div>
+    <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
+      <div className="flex items-center gap-3">
+        <h3 className="text-sm font-semibold text-gray-700 whitespace-nowrap">Pagador:</h3>
+        <select
+          value={selectedPayerId || ''}
+          onChange={handleChange}
+          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+        >
+          <option value="">Selecione ou preencha manualmente...</option>
+          {payers.map((payer) => (
+            <option key={payer.id} value={payer.id}>
+              {payer.nome} - {payer.cpfCnpj}
+            </option>
+          ))}
+        </select>
         <button
           onClick={onOpenModal}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition whitespace-nowrap"
+          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition whitespace-nowrap"
         >
-          Gerenciar Pagadores
+          Gerenciar
         </button>
       </div>
-      {selectedPayerId && (
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
-            ✓ Pagador selecionado. Os dados foram preenchidos automaticamente no formulário.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
