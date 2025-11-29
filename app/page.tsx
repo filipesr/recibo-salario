@@ -29,35 +29,30 @@ const templates = [
     name: 'GoOn',
     description: 'Template profissional com branding GoOn',
     color: 'bg-red-50 border-red-600',
-    icon: '📋',
   },
   {
     id: 'classic' as TemplateType,
     name: 'Clássico',
     description: 'Estilo tradicional amarelo com fonte de máquina de escrever',
     color: 'bg-yellow-50 border-yellow-400',
-    icon: '📄',
   },
   {
     id: 'two-column' as TemplateType,
     name: 'Duas Colunas',
     description: 'Recibo azul com canhoto destacável',
     color: 'bg-sky-50 border-cyan-400',
-    icon: '📋',
   },
   {
     id: 'modern' as TemplateType,
     name: 'Moderno',
     description: 'Design minimalista e contemporâneo',
     color: 'bg-white border-gray-300',
-    icon: '✨',
   },
   {
     id: 'formal' as TemplateType,
     name: 'Formal',
     description: 'Layout corporativo e profissional',
     color: 'bg-slate-50 border-slate-400',
-    icon: '🏢',
   },
 ];
 
@@ -72,7 +67,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Seu nome' },
-    { name: 'emitenteCpfCnpj', label: 'CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
   ],
   'two-column': [
@@ -81,13 +76,12 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'pagador', label: 'Recebi(emos) de', type: 'text', required: true, placeholder: 'Nome do pagador' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
     { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: false, placeholder: '(11) 99999-9999' },
-    { name: 'pagadorEmail', label: 'Email do Pagador', type: 'text', required: false, placeholder: 'email@exemplo.com' },
     { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Seu nome' },
-    { name: 'emitenteCpfCnpj', label: 'CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'emitenteEndereco', label: 'Endereço do Emitente', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
     { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
   ],
@@ -100,7 +94,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Seu nome' },
-    { name: 'emitenteCpfCnpj', label: 'CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
     { name: 'emitenteEmail', label: 'Email do Emitente (opcional)', type: 'text', required: false, placeholder: 'email@exemplo.com' },
   ],
@@ -108,16 +102,15 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'numero', label: 'Número do Documento', type: 'text', required: true, placeholder: '001' },
     { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
     { name: 'pagador', label: 'Nome do Pagador', type: 'text', required: true, placeholder: 'Nome ou razão social' },
-    { name: 'pagadorCpfCnpj', label: 'CPF/CNPJ do Pagador', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'pagadorCpfCnpj', label: 'CI/CPF/CNPJ do Pagador', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
     { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: false, placeholder: '(11) 99999-9999' },
-    { name: 'pagadorEmail', label: 'Email do Pagador', type: 'text', required: false, placeholder: 'email@exemplo.com' },
     { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição detalhada do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data de Emissão', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Nome ou razão social' },
-    { name: 'emitenteCpfCnpj', label: 'CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'emitenteEndereco', label: 'Endereço do Emitente', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
     { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
     { name: 'emitenteEmail', label: 'Email do Emitente', type: 'text', required: true, placeholder: 'contato@empresa.com' },
@@ -127,7 +120,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'moeda', label: 'Moeda', type: 'text', required: true, placeholder: 'R$', defaultValue: 'R$' },
     { name: 'data', label: 'Data de Emissão', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'pagador', label: 'Recibí(mos) de', type: 'text', required: true, placeholder: 'Nome do pagador' },
-    { name: 'pagadorCpfCnpj', label: 'RUC/CPF/CNPJ', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'pagadorCpfCnpj', label: 'RUC/CI/CPF/CNPJ', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Endereço completo do pagador' },
     { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: true, placeholder: '(0991) 501 572' },
     { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
@@ -137,7 +130,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'emitenteNome', label: 'Nome da Empresa', type: 'text', required: true, placeholder: 'GoOn Marketing & Eventos' },
     { name: 'emitenteCargo', label: 'Atividade', type: 'text', required: true, placeholder: 'Actividades Publicitarias' },
     { name: 'emitenteEndereco', label: 'Endereço Completo', type: 'textarea', required: true, placeholder: 'Endereço completo da empresa' },
-    { name: 'emitenteCpfCnpj', label: 'CPF/CNPJ', type: 'text', required: true, placeholder: '00.000.000/0000-00' },
+    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ', type: 'text', required: true, placeholder: '00.000.000/0000-00' },
     { name: 'emitenteTelefone', label: 'Telefone', type: 'tel', required: true, placeholder: '(0991) 501 572' },
   ],
 };
@@ -181,7 +174,6 @@ export default function Home() {
         pagadorCpfCnpj: payer.cpfCnpj,
         pagadorEndereco: payer.endereco,
         pagadorTelefone: payer.telefone,
-        pagadorEmail: payer.email,
       });
     } else {
       setSelectedPayerId(null);
@@ -276,14 +268,14 @@ export default function Home() {
             {/* Layout Customizado de Inputs */}
             <form className="space-y-4">
               {/* Linha 1: Número - Valor - Valor por extenso */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
                 <div>
                   <label htmlFor="numero" className="block text-xs font-medium text-gray-700 mb-1">
                     Número <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="numero"
-                    type="text"
+                    type="number"
                     name="numero"
                     value={formData.numero || ''}
                     onChange={handleInputChange}
@@ -322,26 +314,53 @@ export default function Home() {
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
+                <div>
+                  <label htmlFor="cidade" className="block text-xs font-medium text-gray-700 mb-1">
+                    Cidade <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="cidade"
+                    type="text"
+                    name="cidade"
+                    value={formData.cidade || ''}
+                    onChange={handleInputChange}
+                    placeholder="São Paulo"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="data" className="block text-xs font-medium text-gray-700 mb-1">
+                    Data <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="data"
+                    type="date"
+                    name="data"
+                    value={formData.data || new Date().toISOString().split('T')[0]}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className='md:col-span-3'>
+                  <label htmlFor="referente" className="block text-xs font-medium text-gray-700 mb-1 ">
+                    Referente a <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="referente"
+                    type="text"
+                    name="referente"
+                    value={formData.referente || ''}
+                    onChange={handleInputChange}
+                    placeholder="Mil reais"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               </div>
 
-              {/* Linha 2: Referente a */}
-              <div>
-                <label htmlFor="referente" className="block text-xs font-medium text-gray-700 mb-1">
-                  Referente a <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="referente"
-                  name="referente"
-                  value={formData.referente || ''}
-                  onChange={handleInputChange}
-                  placeholder="Descrição do serviço ou produto"
-                  required
-                  rows={2}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              {/* Linha 3: Recebi de - Telefone - Email - Endereço (Pagador) */}
+              {/* Linha 2: Recebi de - CNPJ/RUC - Telefone - Endereço (Pagador) */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <label htmlFor="pagador" className="block text-xs font-medium text-gray-700 mb-1">
@@ -354,6 +373,21 @@ export default function Home() {
                     value={formData.pagador || ''}
                     onChange={handleInputChange}
                     placeholder="Nome do pagador"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="pagadorCpfCnpj" className="block text-xs font-medium text-gray-700 mb-1">
+                    CNPJ/RUC pagador<span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="pagadorCpfCnpj"
+                    type="text"
+                    name="pagadorCpfCnpj"
+                    value={formData.pagadorCpfCnpj || ''}
+                    onChange={handleInputChange}
+                    placeholder="São Paulo"
                     required
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -373,20 +407,6 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="pagadorEmail" className="block text-xs font-medium text-gray-700 mb-1">
-                    Email Pagador
-                  </label>
-                  <input
-                    id="pagadorEmail"
-                    type="email"
-                    name="pagadorEmail"
-                    value={formData.pagadorEmail || ''}
-                    onChange={handleInputChange}
-                    placeholder="email@exemplo.com"
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
                   <label htmlFor="pagadorEndereco" className="block text-xs font-medium text-gray-700 mb-1">
                     Endereço Pagador
                   </label>
@@ -402,7 +422,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Linha 4: Nome Emitente - Doc - Telefone - Endereço */}
+              {/* Linha 3: Nome Emitente - Doc - Telefone - Endereço */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
                   <label htmlFor="emitenteNome" className="block text-xs font-medium text-gray-700 mb-1">
@@ -421,7 +441,7 @@ export default function Home() {
                 </div>
                 <div>
                   <label htmlFor="emitenteCpfCnpj" className="block text-xs font-medium text-gray-700 mb-1">
-                    CPF/CNPJ Emitente <span className="text-red-500">*</span>
+                    CI/CPF/CNPJ Emitente <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="emitenteCpfCnpj"
@@ -465,37 +485,8 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Linha 5: Cidade - Data */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="cidade" className="block text-xs font-medium text-gray-700 mb-1">
-                    Cidade <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="cidade"
-                    type="text"
-                    name="cidade"
-                    value={formData.cidade || ''}
-                    onChange={handleInputChange}
-                    placeholder="São Paulo"
-                    required
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="data" className="block text-xs font-medium text-gray-700 mb-1">
-                    Data <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="data"
-                    type="date"
-                    name="data"
-                    value={formData.data || new Date().toISOString().split('T')[0]}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
+              {/* Linha 4: Cidade - Data */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               </div>
             </form>
           </div>
@@ -531,7 +522,6 @@ export default function Home() {
                         `}
                         title={template.description}
                       >
-                        <span className="text-lg">{template.icon}</span>
                         <span>{template.name}</span>
                         {selectedTemplate === template.id && (
                           <span className="text-blue-500 font-bold">✓</span>

@@ -100,7 +100,6 @@ export interface SavedReceipt {
   pagadorCpfCnpj: string;
   pagadorEndereco: string;
   pagadorTelefone: string;
-  pagadorEmail: string;
   referente: string;
   cidade: string;
   emitenteNome: string;

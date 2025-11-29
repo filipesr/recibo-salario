@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export default function ReceiptForm() {
   const [formData, setFormData] = useState({
-    numero: '',
+    numero: '1000',
     valor: '',
     pagador: '', // Recebi(emos) de
     valorExtenso: '', // A quantia de

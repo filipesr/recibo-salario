@@ -35,7 +35,6 @@ export default function ReceiptHistory({
       pagadorCpfCnpj: formData.pagadorCpfCnpj || '',
       pagadorEndereco: formData.pagadorEndereco || '',
       pagadorTelefone: formData.pagadorTelefone || '',
-      pagadorEmail: formData.pagadorEmail || '',
       referente: formData.referente || '',
       cidade: formData.cidade || '',
       emitenteNome: formData.emitenteNome || '',
