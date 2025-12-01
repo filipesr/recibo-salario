@@ -95,40 +95,28 @@ export default function FormalTemplate({ data }: TemplateProps<FormalReceiptData
         </div>
       </div>
 
-      {/* Dados do Emitente/Recebedor */}
+      {/* Dados do Colaborador/Recebedor */}
       <div className="p-6 border-b border-gray-300">
         <h2 className="text-sm font-bold text-slate-800 uppercase mb-4 pb-2 border-b-2 border-slate-800">
-          Dados do Recebedor (Emitente)
+          Dados do Recebedor (Colaborador)
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
             <label className="block text-xs font-semibold text-slate-600 mb-1">Nome/Razão Social</label>
             <div className="border-b-2 border-slate-300 pb-1 text-slate-900">
-              {data.emitenteNome || '________________________________'}
+              {data.colaboradorNome || '________________________________'}
             </div>
           </div>
           <div>
             <label className="block text-xs font-semibold text-slate-600 mb-1">CPF/CNPJ</label>
             <div className="border-b-2 border-slate-300 pb-1 text-slate-900">
-              {data.emitenteCpfCnpj || '________________'}
-            </div>
-          </div>
-          <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Endereço</label>
-            <div className="border-b-2 border-slate-300 pb-1 text-slate-900">
-              {data.emitenteEndereco || '________________________________'}
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Telefone</label>
-            <div className="border-b-2 border-slate-300 pb-1 text-slate-900">
-              {data.emitenteTelefone || '________________'}
+              {data.colaboradorCpfCnpj || '________________'}
             </div>
           </div>
           <div className="md:col-span-3">
             <label className="block text-xs font-semibold text-slate-600 mb-1">E-mail</label>
             <div className="border-b-2 border-slate-300 pb-1 text-slate-900">
-              {data.emitenteEmail || '________________________________'}
+              {data.colaboradorEmail || '________________________________'}
             </div>
           </div>
         </div>
@@ -153,7 +141,7 @@ export default function FormalTemplate({ data }: TemplateProps<FormalReceiptData
           <div className="flex flex-col items-center">
             <div className="w-80 border-t-2 border-slate-800 pt-2 mt-12">
               <div className="text-center">
-                <div className="text-sm font-bold text-slate-900">{data.emitenteNome || '__________________'}</div>
+                <div className="text-sm font-bold text-slate-900">{data.colaboradorNome || '__________________'}</div>
                 <div className="text-xs text-slate-600">Assinatura do Recebedor</div>
               </div>
             </div>

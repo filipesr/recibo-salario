@@ -26,6 +26,7 @@ export default function PayerModal({
     nome: '',
     cpfCnpj: '',
     endereco: '',
+    complemento: '',
     telefone: '',
     email: '',
     responsavel: '',
@@ -48,6 +49,7 @@ export default function PayerModal({
       nome: '',
       cpfCnpj: '',
       endereco: '',
+      complemento: '',
       telefone: '',
       email: '',
       responsavel: '',
@@ -61,6 +63,7 @@ export default function PayerModal({
       nome: payer.nome,
       cpfCnpj: payer.cpfCnpj,
       endereco: payer.endereco,
+      complemento: payer.complemento || '',
       telefone: payer.telefone,
       email: payer.email,
       responsavel: payer.responsavel || '',
@@ -74,6 +77,7 @@ export default function PayerModal({
       nome: '',
       cpfCnpj: '',
       endereco: '',
+      complemento: '',
       telefone: '',
       email: '',
       responsavel: '',
@@ -140,6 +144,20 @@ export default function PayerModal({
                     onChange={(e) => setFormData({ ...formData, endereco: e.target.value })}
                     required
                     rows={2}
+                    placeholder="Rua, número, bairro"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Complemento <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.complemento}
+                    onChange={(e) => setFormData({ ...formData, complemento: e.target.value })}
+                    required
+                    placeholder="Cidade, estado e país"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -227,6 +245,9 @@ export default function PayerModal({
                             <div><strong>Responsável:</strong> {payer.responsavel}</div>
                           )}
                           <div className="md:col-span-2"><strong>Endereço:</strong> {payer.endereco}</div>
+                          {payer.complemento && (
+                            <div className="md:col-span-2"><strong>Complemento:</strong> {payer.complemento}</div>
+                          )}
                         </div>
                       </div>
                       <div className="flex gap-2 ml-4">

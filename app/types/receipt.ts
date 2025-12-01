@@ -7,9 +7,8 @@ export interface BaseReceiptData {
   referente: string;
   cidade: string;
   data: string;
-  emitenteNome: string;
-  emitenteCpfCnpj: string;
-  emitenteTelefone: string;
+  colaboradorNome: string;
+  colaboradorCpfCnpj: string;
 }
 
 // Classic template (current yellow design)
@@ -18,30 +17,30 @@ export interface ClassicReceiptData extends BaseReceiptData {}
 // Two-column template with additional address fields
 export interface TwoColumnReceiptData extends BaseReceiptData {
   pagadorEndereco: string;
-  emitenteEndereco: string;
+  pagadorComplemento?: string;
 }
 
 // Modern minimalist template
 export interface ModernReceiptData extends BaseReceiptData {
-  emitenteEmail?: string;
+  colaboradorEmail?: string;
 }
 
 // Formal corporate template with full details
 export interface FormalReceiptData extends BaseReceiptData {
   pagadorCpfCnpj: string;
   pagadorEndereco: string;
-  emitenteEndereco: string;
-  emitenteEmail: string;
+  pagadorComplemento?: string;
+  colaboradorEmail: string;
 }
 
 // GoOn template with company branding
 export interface GoonReceiptData extends BaseReceiptData {
   pagadorCpfCnpj: string;
   pagadorEndereco: string;
+  pagadorComplemento?: string;
   pagadorTelefone: string;
   moeda: string;
-  emitenteEndereco: string;
-  emitenteCargo: string;
+  colaboradorCargo: string;
 }
 
 // Union type for all receipt data types
@@ -85,13 +84,14 @@ export interface Payer {
   nome: string;
   cpfCnpj: string;
   endereco: string;
+  complemento: string;
   telefone: string;
   email: string;
   responsavel?: string;
 }
 
-// Issuer (Emitente) interface for managing issuers
-export interface Issuer {
+// Colaborador (Collaborator) interface for managing collaborators
+export interface Colaborador {
   id: string;
   nome: string;
   cpfCnpj: string;
@@ -106,14 +106,14 @@ export interface SavedReceipt {
   pagador: string;
   pagadorCpfCnpj: string;
   pagadorEndereco: string;
+  pagadorComplemento?: string;
   pagadorTelefone: string;
   referente: string;
   cidade: string;
-  emitenteNome: string;
-  emitenteCpfCnpj: string;
-  emitenteEndereco: string;
-  emitenteTelefone: string;
-  emitenteEmail: string;
+  colaboradorNome: string;
+  colaboradorCpfCnpj: string;
+  colaboradorEmail?: string;
+  colaboradorCargo?: string;
   template: TemplateType;
 }
 

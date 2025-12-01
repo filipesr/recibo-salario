@@ -87,7 +87,7 @@ export default function TwoColumnTemplate({ data }: TemplateProps<TwoColumnRecei
 
           {/* Texto Legal */}
           <p className="text-xs text-cyan-700 mb-2 text-center leading-tight">
-            Para maior clareza firm{data.emitenteNome ? 'o' : '___'} o presente.
+            Para maior clareza firm{data.colaboradorNome ? 'o' : '___'} o presente.
           </p>
 
           {/* Local e Data */}
@@ -97,23 +97,19 @@ export default function TwoColumnTemplate({ data }: TemplateProps<TwoColumnRecei
             </span>
           </div>
 
-          {/* Emitente e Assinatura */}
+          {/* Colaborador e Assinatura */}
           <div className="border-2 border-cyan-400 rounded p-2 space-y-1.5">
             <div className="grid grid-cols-2 gap-3">
               <div className="text-sm">
-                <span className="text-cyan-600 font-semibold">Emitente: </span>
-                <span className="border-b border-cyan-300">{data.emitenteNome || '________'}</span>
+                <span className="text-cyan-600 font-semibold">Colaborador: </span>
+                <span className="border-b border-cyan-300">{data.colaboradorNome || '________'}</span>
               </div>
               <div className="text-sm">
                 <span className="text-cyan-600 font-semibold">CI: </span>
-                <span className="border-b border-cyan-300">{data.emitenteCpfCnpj || '________'}</span>
+                <span className="border-b border-cyan-300">{data.colaboradorCpfCnpj || '________'}</span>
               </div>
             </div>
 
-            <div className="text-sm">
-              <span className="text-cyan-600 font-semibold">Endereço: </span>
-              <span className="border-b border-cyan-300">{data.emitenteEndereco || '___________________________'}</span>
-            </div>
 
             <div className="pt-2">
               <div className="text-cyan-600 font-semibold text-xs mb-1">Assinatura</div>

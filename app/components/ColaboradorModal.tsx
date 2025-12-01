@@ -1,28 +1,28 @@
 'use client';
 
 import { useState } from 'react';
-import { Issuer } from '@/app/types/receipt';
+import { Colaborador } from '@/app/types/receipt';
 
-interface IssuerModalProps {
+interface ColaboradorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  issuers: Issuer[];
-  onAddIssuer: (issuer: Omit<Issuer, 'id'>) => void;
-  onUpdateIssuer: (id: string, issuer: Partial<Omit<Issuer, 'id'>>) => void;
-  onDeleteIssuer: (id: string) => void;
+  colaboradores: Colaborador[];
+  onAddColaborador: (colaborador: Omit<Colaborador, 'id'>) => void;
+  onUpdateColaborador: (id: string, colaborador: Partial<Omit<Colaborador, 'id'>>) => void;
+  onDeleteColaborador: (id: string) => void;
 }
 
-export default function IssuerModal({
+export default function ColaboradorModal({
   isOpen,
   onClose,
-  issuers,
-  onAddIssuer,
-  onUpdateIssuer,
-  onDeleteIssuer,
-}: IssuerModalProps) {
+  colaboradores,
+  onAddColaborador,
+  onUpdateColaborador,
+  onDeleteColaborador,
+}: ColaboradorModalProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [formData, setFormData] = useState<Omit<Issuer, 'id'>>({
+  const [formData, setFormData] = useState<Omit<Colaborador, 'id'>>({
     nome: '',
     cpfCnpj: '',
   });
@@ -33,10 +33,10 @@ export default function IssuerModal({
     e.preventDefault();
 
     if (editingId) {
-      onUpdateIssuer(editingId, formData);
+      onUpdateColaborador(editingId, formData);
       setEditingId(null);
     } else {
-      onAddIssuer(formData);
+      onAddColaborador(formData);
       setIsAdding(false);
     }
 
@@ -46,12 +46,12 @@ export default function IssuerModal({
     });
   };
 
-  const handleEdit = (issuer: Issuer) => {
-    setEditingId(issuer.id);
+  const handleEdit = (colaborador: Colaborador) => {
+    setEditingId(colaborador.id);
     setIsAdding(true);
     setFormData({
-      nome: issuer.nome,
-      cpfCnpj: issuer.cpfCnpj,
+      nome: colaborador.nome,
+      cpfCnpj: colaborador.cpfCnpj,
     });
   };
 
@@ -65,8 +65,8 @@ export default function IssuerModal({
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Tem certeza que deseja deletar este emitente?')) {
-      onDeleteIssuer(id);
+    if (confirm('Tem certeza que deseja deletar este colaborador?')) {
+      onDeleteColaborador(id);
     }
   };
 
@@ -74,7 +74,7 @@ export default function IssuerModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-900">Gerenciar Emitentes</h2>
+          <h2 className="text-2xl font-bold text-gray-900">Gerenciar Colaboradores</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-2xl"
@@ -88,7 +88,7 @@ export default function IssuerModal({
           {isAdding ? (
             <form onSubmit={handleSubmit} className="mb-6 bg-gray-50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-4">
-                {editingId ? 'Editar Emitente' : 'Adicionar Novo Emitente'}
+                {editingId ? 'Editar Colaborador' : 'Adicionar Novo Colaborador'}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -137,38 +137,38 @@ export default function IssuerModal({
               onClick={() => setIsAdding(true)}
               className="mb-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
             >
-              + Adicionar Emitente
+              + Adicionar Colaborador
             </button>
           )}
 
-          {/* Issuers List */}
+          {/* Colaboradores List */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Emitentes Cadastrados</h3>
-            {issuers.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">Nenhum emitente cadastrado ainda.</p>
+            <h3 className="text-lg font-semibold mb-4">Colaboradores Cadastrados</h3>
+            {colaboradores.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">Nenhum colaborador cadastrado ainda.</p>
             ) : (
               <div className="space-y-3">
-                {issuers.map((issuer) => (
+                {colaboradores.map((colaborador) => (
                   <div
-                    key={issuer.id}
+                    key={colaborador.id}
                     className="border border-gray-300 rounded-lg p-4 hover:bg-gray-50"
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">{issuer.nome}</h4>
+                        <h4 className="font-semibold text-gray-900">{colaborador.nome}</h4>
                         <div className="mt-2 text-sm text-gray-600">
-                          <div><strong>CI/CPF:</strong> {issuer.cpfCnpj}</div>
+                          <div><strong>CI/CPF:</strong> {colaborador.cpfCnpj}</div>
                         </div>
                       </div>
                       <div className="flex gap-2 ml-4">
                         <button
-                          onClick={() => handleEdit(issuer)}
+                          onClick={() => handleEdit(colaborador)}
                           className="text-blue-600 hover:text-blue-800 font-semibold"
                         >
                           Editar
                         </button>
                         <button
-                          onClick={() => handleDelete(issuer.id)}
+                          onClick={() => handleDelete(colaborador.id)}
                           className="text-red-600 hover:text-red-800 font-semibold"
                         >
                           Deletar

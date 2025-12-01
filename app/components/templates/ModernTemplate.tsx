@@ -58,21 +58,20 @@ export default function ModernTemplate({ data }: TemplateProps<ModernReceiptData
         </p>
       </div>
 
-      {/* Footer com informações do Emitente */}
+      {/* Footer com informações do Colaborador */}
       <div className="pt-8 border-t border-gray-200">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
-          {/* Dados do Emitente */}
+          {/* Dados do Colaborador */}
           <div className="space-y-2">
             <div>
               <div className="text-sm font-medium text-gray-900">
-                {data.emitenteNome || '__________________'}
+                {data.colaboradorNome || '__________________'}
               </div>
             </div>
             <div className="text-xs text-gray-500 space-y-1">
-              <div>CI: {data.emitenteCpfCnpj || '__________________'}</div>
-              <div>Tel: {data.emitenteTelefone || '__________________'}</div>
-              {data.emitenteEmail && (
-                <div>Email: {data.emitenteEmail}</div>
+              <div>CI: {data.colaboradorCpfCnpj || '__________________'}</div>
+              {data.colaboradorEmail && (
+                <div>Email: {data.colaboradorEmail}</div>
               )}
             </div>
           </div>

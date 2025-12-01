@@ -30,7 +30,7 @@ export default function GoonTemplate({ data }: TemplateProps<GoonReceiptData>) {
                 {data.pagadorEndereco || 'Endereço do pagador'}
               </div>
               <div className="text-gray-600 text-[10px]">
-                Tel: {data.pagadorTelefone || '(000) 000 000'} - {data.cidade || 'Cidade'}
+                Tel: {data.pagadorTelefone || '(000) 000 000'} - {data.pagadorComplemento || 'Cidade'}
               </div>
             </div>
           </div>
@@ -104,11 +104,11 @@ export default function GoonTemplate({ data }: TemplateProps<GoonReceiptData>) {
           </div>
           <div className="text-sm">
             <span className="font-medium">Aclaración:</span>
-            <span className="border-b border-gray-400 ml-2 inline-block" style={{ width: '370px' }}>{data.emitenteNome || ''}</span>
+            <span className="border-b border-gray-400 ml-2 inline-block" style={{ width: '370px' }}>{data.colaboradorNome || ''}</span>
           </div>
           <div className="text-sm">
             <span className="font-medium">C.I.Nº:</span>
-            <span className="border-b border-gray-400 ml-2 inline-block" style={{ width: '390px' }}>{data.emitenteCpfCnpj || ''}</span>
+            <span className="border-b border-gray-400 ml-2 inline-block" style={{ width: '390px' }}>{data.colaboradorCpfCnpj || ''}</span>
           </div>
         </div>
       </div>

@@ -62,21 +62,17 @@ export default function ClassicTemplate({ data }: TemplateProps<ClassicReceiptDa
 
       {/* Rodapé / Assinatura */}
       <div className="mt-12 pt-4 border-t border-gray-300 grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Dados do Emitente */}
+        {/* Dados do Colaborador */}
         <div className="text-sm space-y-2">
-          <h3 className="font-bold text-gray-700 uppercase mb-2">Dados do Emitente</h3>
+          <h3 className="font-bold text-gray-700 uppercase mb-2">Dados do Colaborador</h3>
           <div>
             <label className="block text-xs text-gray-500">Nome:</label>
-            <span className="block border-b border-gray-300">{data.emitenteNome || '_______________'}</span>
+            <span className="block border-b border-gray-300">{data.colaboradorNome || '_______________'}</span>
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="block text-xs text-gray-500">CPF/CNPJ:</label>
-              <span className="block border-b border-gray-300">{data.emitenteCpfCnpj || '_______________'}</span>
-            </div>
-            <div className="flex-1">
-              <label className="block text-xs text-gray-500">Telefone:</label>
-              <span className="block border-b border-gray-300">{data.emitenteTelefone || '_______________'}</span>
+              <span className="block border-b border-gray-300">{data.colaboradorCpfCnpj || '_______________'}</span>
             </div>
           </div>
         </div>
@@ -84,7 +80,7 @@ export default function ClassicTemplate({ data }: TemplateProps<ClassicReceiptDa
         {/* Área de Assinatura Visual */}
         <div className="flex flex-col justify-end items-center">
           <div className="w-full border-b border-gray-800 mb-2 h-16"></div>
-          <span className="text-sm font-bold text-gray-600 uppercase">Assinatura do Emitente</span>
+          <span className="text-sm font-bold text-gray-600 uppercase">Assinatura do Colaborador</span>
         </div>
       </div>
     </div>

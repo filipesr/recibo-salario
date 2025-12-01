@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import PayerSelector from './components/PayerSelector';
 import PayerModal from './components/PayerModal';
-import IssuerSelector from './components/IssuerSelector';
-import IssuerModal from './components/IssuerModal';
+import ColaboradorSelector from './components/ColaboradorSelector';
+import ColaboradorModal from './components/ColaboradorModal';
 import ReceiptHistory from './components/ReceiptHistory';
 import ClassicTemplate from './components/templates/ClassicTemplate';
 import TwoColumnTemplate from './components/templates/TwoColumnTemplate';
@@ -12,8 +12,9 @@ import ModernTemplate from './components/templates/ModernTemplate';
 import FormalTemplate from './components/templates/FormalTemplate';
 import GoonTemplate from './components/templates/GoonTemplate';
 import { usePayers } from './hooks/usePayers';
-import { useIssuers } from './hooks/useIssuers';
+import { useColaboradores } from './hooks/useColaboradores';
 import { useReceiptData } from './hooks/useReceiptData';
+import { migrateLocalStorage } from './utils/migrateLocalStorage';
 import {
   TemplateType,
   ClassicReceiptData,
@@ -23,7 +24,7 @@ import {
   GoonReceiptData,
   FieldConfig,
   Payer,
-  Issuer,
+  Colaborador,
 } from './types/receipt';
 
 // Templates disponíveis
@@ -70,9 +71,9 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
-    { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Seu nome' },
-    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Seu nome' },
+    { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
   ],
   'two-column': [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '001' },
@@ -84,10 +85,10 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
-    { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Seu nome' },
-    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteEndereco', label: 'Endereço do Emitente', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
-    { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Seu nome' },
+    { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteEndereco', label: 'Endereço do Colaborador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
+    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
   ],
   modern: [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '001' },
@@ -97,10 +98,10 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
-    { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Seu nome' },
-    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
-    { name: 'emitenteEmail', label: 'Email do Emitente (opcional)', type: 'text', required: false, placeholder: 'email@exemplo.com' },
+    { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Seu nome' },
+    { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorEmail', label: 'Email do Colaborador (opcional)', type: 'text', required: false, placeholder: 'email@exemplo.com' },
   ],
   formal: [
     { name: 'numero', label: 'Número do Documento', type: 'text', required: true, placeholder: '001' },
@@ -113,11 +114,11 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'referente', label: 'Referente a', type: 'textarea', required: true, placeholder: 'Descrição detalhada do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'São Paulo' },
     { name: 'data', label: 'Data de Emissão', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
-    { name: 'emitenteNome', label: 'Nome do Emitente', type: 'text', required: true, placeholder: 'Nome ou razão social' },
-    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ do Emitente', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteEndereco', label: 'Endereço do Emitente', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
-    { name: 'emitenteTelefone', label: 'Telefone do Emitente', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
-    { name: 'emitenteEmail', label: 'Email do Emitente', type: 'text', required: true, placeholder: 'contato@empresa.com' },
+    { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Nome ou razão social' },
+    { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
+    { name: 'emitenteEndereco', label: 'Endereço do Colaborador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
+    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorEmail', label: 'Email do Colaborador', type: 'text', required: true, placeholder: 'contato@empresa.com' },
   ],
   goon: [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '0000951' },
@@ -126,22 +127,23 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'pagador', label: 'Recibí(mos) de', type: 'text', required: true, placeholder: 'Nome do pagador' },
     { name: 'pagadorCpfCnpj', label: 'RUC/CI/CPF/CNPJ', type: 'text', required: true, placeholder: '000.000.000-00' },
     { name: 'pagadorEndereco', label: 'Endereço do Pagador', type: 'textarea', required: true, placeholder: 'Endereço completo do pagador' },
+    { name: 'pagadorComplemento', label: 'Complemento do Pagador', type: 'textarea', required: true, placeholder: 'Complemento do pagador' },
     { name: 'pagadorTelefone', label: 'Telefone do Pagador', type: 'tel', required: true, placeholder: '(0991) 501 572' },
     { name: 'valor', label: 'Valor', type: 'text', required: true, placeholder: '1.000,00' },
     { name: 'valorExtenso', label: 'Valor por extenso', type: 'text', required: true, placeholder: 'Mil reais' },
     { name: 'referente', label: 'En concepto de', type: 'textarea', required: true, placeholder: 'Descrição do serviço ou produto' },
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'Ciudad del Este' },
-    { name: 'emitenteNome', label: 'Nome da Empresa', type: 'text', required: true, placeholder: 'GoOn Marketing & Eventos' },
-    { name: 'emitenteCargo', label: 'Atividade', type: 'text', required: true, placeholder: 'Actividades Publicitarias' },
+    { name: 'colaboradorNome', label: 'Nome da Empresa', type: 'text', required: true, placeholder: 'GoOn Marketing & Eventos' },
+    { name: 'colaboradorCargo', label: 'Atividade', type: 'text', required: true, placeholder: 'Actividades Publicitarias' },
     { name: 'emitenteEndereco', label: 'Endereço Completo', type: 'textarea', required: true, placeholder: 'Endereço completo da empresa' },
-    { name: 'emitenteCpfCnpj', label: 'CI/CPF/CNPJ', type: 'text', required: true, placeholder: '00.000.000/0000-00' },
+    { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ', type: 'text', required: true, placeholder: '00.000.000/0000-00' },
     { name: 'emitenteTelefone', label: 'Telefone', type: 'tel', required: true, placeholder: '(0991) 501 572' },
   ],
 };
 
 export default function Home() {
   const { payers, addPayer, updatePayer, deletePayer } = usePayers();
-  const { issuers, addIssuer, updateIssuer, deleteIssuer } = useIssuers();
+  const { colaboradores, addColaborador, updateColaborador, deleteColaborador } = useColaboradores();
   const {
     formData,
     setFormData,
@@ -154,12 +156,13 @@ export default function Home() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPayerId, setSelectedPayerId] = useState<string | null>(null);
-  const [isIssuerModalOpen, setIsIssuerModalOpen] = useState(false);
-  const [selectedIssuerId, setSelectedIssuerId] = useState<string | null>(null);
+  const [isColaboradorModalOpen, setIsColaboradorModalOpen] = useState(false);
+  const [selectedColaboradorId, setSelectedColaboradorId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
   // Evita hydration mismatch ao carregar dados do localStorage
   useEffect(() => {
+    migrateLocalStorage();
     setMounted(true);
   }, []);
 
@@ -181,22 +184,23 @@ export default function Home() {
         pagadorCpfCnpj: payer.cpfCnpj,
         pagadorEndereco: payer.endereco,
         pagadorTelefone: payer.telefone,
+        pagadorComplemento: payer.complemento,
       });
     } else {
       setSelectedPayerId(null);
     }
   };
 
-  const handleSelectIssuer = (issuer: Issuer | null) => {
-    if (issuer) {
-      setSelectedIssuerId(issuer.id);
-      // Update form fields with issuer data
+  const handleSelectColaborador = (colaborador: Colaborador | null) => {
+    if (colaborador) {
+      setSelectedColaboradorId(colaborador.id);
+      // Update form fields with colaborador data
       updateFields({
-        emitenteNome: issuer.nome,
-        emitenteCpfCnpj: issuer.cpfCnpj,
+        colaboradorNome: colaborador.nome,
+        colaboradorCpfCnpj: colaborador.cpfCnpj,
       });
     } else {
-      setSelectedIssuerId(null);
+      setSelectedColaboradorId(null);
     }
   };
 
@@ -209,7 +213,7 @@ export default function Home() {
     if (confirm('Deseja limpar todos os campos e começar um novo recibo?')) {
       clearReceipt();
       setSelectedPayerId(null);
-      setSelectedIssuerId(null);
+      setSelectedColaboradorId(null);
     }
   };
 
@@ -267,12 +271,12 @@ export default function Home() {
             onOpenModal={() => setIsModalOpen(true)}
           />
 
-          {/* Seletor de Emitente */}
-          <IssuerSelector
-            issuers={issuers}
-            selectedIssuerId={selectedIssuerId}
-            onSelectIssuer={handleSelectIssuer}
-            onOpenModal={() => setIsIssuerModalOpen(true)}
+          {/* Seletor de Colaborador */}
+          <ColaboradorSelector
+            colaboradores={colaboradores}
+            selectedColaboradorId={selectedColaboradorId}
+            onSelectColaborador={handleSelectColaborador}
+            onOpenModal={() => setIsColaboradorModalOpen(true)}
           />
         </div>
 
@@ -298,7 +302,7 @@ export default function Home() {
             {/* Layout Customizado de Inputs */}
             <form className="space-y-4">
               {/* Linha 1: Número - Valor - Valor por extenso */}
-              <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
                 <div>
                   <label htmlFor="numero" className="block text-xs font-medium text-gray-700 mb-1">
                     Número <span className="text-red-500">*</span>
@@ -310,6 +314,20 @@ export default function Home() {
                     value={formData.numero || ''}
                     onChange={handleInputChange}
                     placeholder="001"
+                    required
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="data" className="block text-xs font-medium text-gray-700 mb-1">
+                    Data <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id="data"
+                    type="date"
+                    name="data"
+                    value={formData.data || new Date().toISOString().split('T')[0]}
+                    onChange={handleInputChange}
                     required
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -329,8 +347,8 @@ export default function Home() {
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
-                <div>
-                  <label htmlFor="valorExtenso" className="block text-xs font-medium text-gray-700 mb-1">
+                <div className='md:col-span-3'>
+                  <label htmlFor="valorExtenso" className="block text-xs font-medium text-gray-700 mb-1 ">
                     Valor por extenso <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -344,36 +362,7 @@ export default function Home() {
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
-                <div>
-                  <label htmlFor="cidade" className="block text-xs font-medium text-gray-700 mb-1">
-                    Cidade <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="cidade"
-                    type="text"
-                    name="cidade"
-                    value={formData.cidade || ''}
-                    onChange={handleInputChange}
-                    placeholder="São Paulo"
-                    required
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="data" className="block text-xs font-medium text-gray-700 mb-1">
-                    Data <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="data"
-                    type="date"
-                    name="data"
-                    value={formData.data || new Date().toISOString().split('T')[0]}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div className='md:col-span-3'>
+                <div className='md:col-span-4'>
                   <label htmlFor="referente" className="block text-xs font-medium text-gray-700 mb-1 ">
                     Referente a <span className="text-red-500">*</span>
                   </label>
@@ -391,7 +380,7 @@ export default function Home() {
               </div>
 
               {/* Linha 2: Recebi de - CNPJ/RUC - Telefone - Endereço (Pagador) */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
                   <label htmlFor="pagador" className="block text-xs font-medium text-gray-700 mb-1">
                     Recebi de <span className="text-red-500">*</span>
@@ -446,17 +435,31 @@ export default function Home() {
                     name="pagadorEndereco"
                     value={formData.pagadorEndereco || ''}
                     onChange={handleInputChange}
-                    placeholder="Rua, número, cidade"
+                    placeholder="Rua, número, bairro"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="pagadorComplemento" className="block text-xs font-medium text-gray-700 mb-1">
+                    Endereço Pagador
+                  </label>
+                  <input
+                    id="pagadorComplemento"
+                    type="text"
+                    name="pagadorComplemento"
+                    value={formData.pagadorComplemento || ''}
+                    onChange={handleInputChange}
+                    placeholder="cidade, Estado, País"
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
 
-              {/* Linha 3: Nome Emitente - Doc - Telefone - Endereço */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Linha 3: Nome Colaborador - Doc */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
                   <label htmlFor="emitenteNome" className="block text-xs font-medium text-gray-700 mb-1">
-                    Nome Emitente <span className="text-red-500">*</span>
+                    Nome Colaborador <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="emitenteNome"
@@ -471,7 +474,7 @@ export default function Home() {
                 </div>
                 <div>
                   <label htmlFor="emitenteCpfCnpj" className="block text-xs font-medium text-gray-700 mb-1">
-                    CI/CPF/CNPJ Emitente <span className="text-red-500">*</span>
+                    CI/CPF/CNPJ Colaborador <span className="text-red-500">*</span>
                   </label>
                   <input
                     id="emitenteCpfCnpj"
@@ -481,35 +484,6 @@ export default function Home() {
                     onChange={handleInputChange}
                     placeholder="000.000.000-00"
                     required
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="emitenteTelefone" className="block text-xs font-medium text-gray-700 mb-1">
-                    Telefone Emitente <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    id="emitenteTelefone"
-                    type="tel"
-                    name="emitenteTelefone"
-                    value={formData.emitenteTelefone || ''}
-                    onChange={handleInputChange}
-                    placeholder="(11) 99999-9999"
-                    required
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="emitenteEndereco" className="block text-xs font-medium text-gray-700 mb-1">
-                    Endereço Emitente
-                  </label>
-                  <input
-                    id="emitenteEndereco"
-                    type="text"
-                    name="emitenteEndereco"
-                    value={formData.emitenteEndereco || ''}
-                    onChange={handleInputChange}
-                    placeholder="Rua, número, cidade"
                     className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -591,14 +565,14 @@ export default function Home() {
         onDeletePayer={deletePayer}
       />
 
-      {/* Issuer Modal */}
-      <IssuerModal
-        isOpen={isIssuerModalOpen}
-        onClose={() => setIsIssuerModalOpen(false)}
-        issuers={issuers}
-        onAddIssuer={addIssuer}
-        onUpdateIssuer={updateIssuer}
-        onDeleteIssuer={deleteIssuer}
+      {/* Colaborador Modal */}
+      <ColaboradorModal
+        isOpen={isColaboradorModalOpen}
+        onClose={() => setIsColaboradorModalOpen(false)}
+        colaboradores={colaboradores}
+        onAddColaborador={addColaborador}
+        onUpdateColaborador={updateColaborador}
+        onDeleteColaborador={deleteColaborador}
       />
     </main>
   );
