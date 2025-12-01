@@ -73,7 +73,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Seu nome' },
     { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
   ],
   'two-column': [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '001' },
@@ -87,8 +87,8 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Seu nome' },
     { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteEndereco', label: 'Endereço do Colaborador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
-    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorEndereco', label: 'Endereço do Colaborador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF' },
+    { name: 'colaboradorTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
   ],
   modern: [
     { name: 'numero', label: 'Número do Recibo', type: 'text', required: true, placeholder: '001' },
@@ -100,7 +100,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'data', label: 'Data', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Seu nome' },
     { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
     { name: 'colaboradorEmail', label: 'Email do Colaborador (opcional)', type: 'text', required: false, placeholder: 'email@exemplo.com' },
   ],
   formal: [
@@ -116,8 +116,8 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'data', label: 'Data de Emissão', type: 'date', required: true, defaultValue: new Date().toISOString().split('T')[0] },
     { name: 'colaboradorNome', label: 'Nome do Colaborador', type: 'text', required: true, placeholder: 'Nome ou razão social' },
     { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ do Colaborador', type: 'text', required: true, placeholder: '000.000.000-00' },
-    { name: 'emitenteEndereco', label: 'Endereço do Colaborador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
-    { name: 'emitenteTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
+    { name: 'colaboradorEndereco', label: 'Endereço do Colaborador', type: 'textarea', required: true, placeholder: 'Rua, número, bairro, cidade - UF, CEP' },
+    { name: 'colaboradorTelefone', label: 'Telefone do Colaborador', type: 'tel', required: true, placeholder: '(11) 99999-9999' },
     { name: 'colaboradorEmail', label: 'Email do Colaborador', type: 'text', required: true, placeholder: 'contato@empresa.com' },
   ],
   goon: [
@@ -135,9 +135,9 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
     { name: 'cidade', label: 'Cidade', type: 'text', required: true, placeholder: 'Ciudad del Este' },
     { name: 'colaboradorNome', label: 'Nome da Empresa', type: 'text', required: true, placeholder: 'GoOn Marketing & Eventos' },
     { name: 'colaboradorCargo', label: 'Atividade', type: 'text', required: true, placeholder: 'Actividades Publicitarias' },
-    { name: 'emitenteEndereco', label: 'Endereço Completo', type: 'textarea', required: true, placeholder: 'Endereço completo da empresa' },
+    { name: 'colaboradorEndereco', label: 'Endereço Completo', type: 'textarea', required: true, placeholder: 'Endereço completo da empresa' },
     { name: 'colaboradorCpfCnpj', label: 'CI/CPF/CNPJ', type: 'text', required: true, placeholder: '00.000.000/0000-00' },
-    { name: 'emitenteTelefone', label: 'Telefone', type: 'tel', required: true, placeholder: '(0991) 501 572' },
+    { name: 'colaboradorTelefone', label: 'Telefone', type: 'tel', required: true, placeholder: '(0991) 501 572' },
   ],
 };
 
@@ -458,14 +458,14 @@ export default function Home() {
               {/* Linha 3: Nome Colaborador - Doc */}
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
-                  <label htmlFor="emitenteNome" className="block text-xs font-medium text-gray-700 mb-1">
+                  <label htmlFor="colaboradorNome" className="block text-xs font-medium text-gray-700 mb-1">
                     Nome Colaborador <span className="text-red-500">*</span>
                   </label>
                   <input
-                    id="emitenteNome"
+                    id="colaboradorNome"
                     type="text"
-                    name="emitenteNome"
-                    value={formData.emitenteNome || ''}
+                    name="colaboradorNome"
+                    value={formData.colaboradorNome || ''}
                     onChange={handleInputChange}
                     placeholder="Seu nome"
                     required
@@ -473,14 +473,14 @@ export default function Home() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="emitenteCpfCnpj" className="block text-xs font-medium text-gray-700 mb-1">
+                  <label htmlFor="colaboradorCpfCnpj" className="block text-xs font-medium text-gray-700 mb-1">
                     CI/CPF/CNPJ Colaborador <span className="text-red-500">*</span>
                   </label>
                   <input
-                    id="emitenteCpfCnpj"
+                    id="colaboradorCpfCnpj"
                     type="text"
-                    name="emitenteCpfCnpj"
-                    value={formData.emitenteCpfCnpj || ''}
+                    name="colaboradorCpfCnpj"
+                    value={formData.colaboradorCpfCnpj || ''}
                     onChange={handleInputChange}
                     placeholder="000.000.000-00"
                     required
