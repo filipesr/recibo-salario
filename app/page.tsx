@@ -258,18 +258,16 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-gray-900">Gerador de Recibos</h1>
         </header>
 
-        {/* Seletor de Pagador */}
-        <div className="no-print mb-6">
+        <div className="flex flex-col md:flex-row *:w-full gap-6 no-print">
+          {/* Seletor de Pagador */}
           <PayerSelector
             payers={payers}
             selectedPayerId={selectedPayerId}
             onSelectPayer={handleSelectPayer}
             onOpenModal={() => setIsModalOpen(true)}
           />
-        </div>
 
-        {/* Seletor de Emitente */}
-        <div className="no-print mb-6">
+          {/* Seletor de Emitente */}
           <IssuerSelector
             issuers={issuers}
             selectedIssuerId={selectedIssuerId}
@@ -277,6 +275,7 @@ export default function Home() {
             onOpenModal={() => setIsIssuerModalOpen(true)}
           />
         </div>
+
 
         {/* Formulário de Dados */}
         <div className="no-print">
