@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import PayerSelector from './components/PayerSelector';
 import PayerModal from './components/PayerModal';
+import IssuerSelector from './components/IssuerSelector';
+import IssuerModal from './components/IssuerModal';
 import ReceiptHistory from './components/ReceiptHistory';
 import ClassicTemplate from './components/templates/ClassicTemplate';
 import TwoColumnTemplate from './components/templates/TwoColumnTemplate';
@@ -10,6 +12,7 @@ import ModernTemplate from './components/templates/ModernTemplate';
 import FormalTemplate from './components/templates/FormalTemplate';
 import GoonTemplate from './components/templates/GoonTemplate';
 import { usePayers } from './hooks/usePayers';
+import { useIssuers } from './hooks/useIssuers';
 import { useReceiptData } from './hooks/useReceiptData';
 import {
   TemplateType,
@@ -20,6 +23,7 @@ import {
   GoonReceiptData,
   FieldConfig,
   Payer,
+  Issuer,
 } from './types/receipt';
 
 // Templates disponíveis
@@ -137,6 +141,7 @@ const templateFields: Record<TemplateType, FieldConfig[]> = {
 
 export default function Home() {
   const { payers, addPayer, updatePayer, deletePayer } = usePayers();
+  const { issuers, addIssuer, updateIssuer, deleteIssuer } = useIssuers();
   const {
     formData,
     setFormData,
@@ -149,6 +154,8 @@ export default function Home() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPayerId, setSelectedPayerId] = useState<string | null>(null);
+  const [isIssuerModalOpen, setIsIssuerModalOpen] = useState(false);
+  const [selectedIssuerId, setSelectedIssuerId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
   // Evita hydration mismatch ao carregar dados do localStorage
@@ -180,6 +187,19 @@ export default function Home() {
     }
   };
 
+  const handleSelectIssuer = (issuer: Issuer | null) => {
+    if (issuer) {
+      setSelectedIssuerId(issuer.id);
+      // Update form fields with issuer data
+      updateFields({
+        emitenteNome: issuer.nome,
+        emitenteCpfCnpj: issuer.cpfCnpj,
+      });
+    } else {
+      setSelectedIssuerId(null);
+    }
+  };
+
   const handleLoadReceipt = (data: Record<string, string>, template: TemplateType) => {
     setFormData(data);
     changeTemplate(template);
@@ -189,6 +209,7 @@ export default function Home() {
     if (confirm('Deseja limpar todos os campos e começar um novo recibo?')) {
       clearReceipt();
       setSelectedPayerId(null);
+      setSelectedIssuerId(null);
     }
   };
 
@@ -244,6 +265,16 @@ export default function Home() {
             selectedPayerId={selectedPayerId}
             onSelectPayer={handleSelectPayer}
             onOpenModal={() => setIsModalOpen(true)}
+          />
+        </div>
+
+        {/* Seletor de Emitente */}
+        <div className="no-print mb-6">
+          <IssuerSelector
+            issuers={issuers}
+            selectedIssuerId={selectedIssuerId}
+            onSelectIssuer={handleSelectIssuer}
+            onOpenModal={() => setIsIssuerModalOpen(true)}
           />
         </div>
 
@@ -559,6 +590,16 @@ export default function Home() {
         onAddPayer={addPayer}
         onUpdatePayer={updatePayer}
         onDeletePayer={deletePayer}
+      />
+
+      {/* Issuer Modal */}
+      <IssuerModal
+        isOpen={isIssuerModalOpen}
+        onClose={() => setIsIssuerModalOpen(false)}
+        issuers={issuers}
+        onAddIssuer={addIssuer}
+        onUpdateIssuer={updateIssuer}
+        onDeleteIssuer={deleteIssuer}
       />
     </main>
   );

@@ -19,7 +19,10 @@ export default function GoonTemplate({ data }: TemplateProps<GoonReceiptData>) {
                   className="object-contain"
                 />
               </div>
-              <div className="text-lg flex-1 text-center">Actividades Publicitarias</div>
+              <div className="flex flex-col flex-1 text-center">
+                <span className='text-3xl'>Actividades Publicitarias</span>
+                <span className='text-xs'>DE GRUPO LEGADO</span>
+              </div>
             </div>
             <div className="border-b w-full" />
             <div className="text-xs leading-tight p-2 text-center w-full">
@@ -27,7 +30,7 @@ export default function GoonTemplate({ data }: TemplateProps<GoonReceiptData>) {
                 {data.pagadorEndereco || 'Endereço do pagador'}
               </div>
               <div className="text-gray-600 text-[10px]">
-                Tel: {data.pagadorTelefone || '(000) 000 000'} - {data.cidade || 'Cidade'} - {data.pagadorCpfCnpj || 'CPF/CNPJ'}
+                Tel: {data.pagadorTelefone || '(000) 000 000'} - {data.cidade || 'Cidade'}
               </div>
             </div>
           </div>

@@ -90,6 +90,13 @@ export interface Payer {
   responsavel?: string;
 }
 
+// Issuer (Emitente) interface for managing issuers
+export interface Issuer {
+  id: string;
+  nome: string;
+  cpfCnpj: string;
+}
+
 // Saved receipt for JSON export/import
 export interface SavedReceipt {
   numero: string;
